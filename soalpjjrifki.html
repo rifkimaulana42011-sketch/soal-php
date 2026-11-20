@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perffil Personal De - Muhamad Rifki Maulana</title>
+    <!-- Font Poppins & Font Awesome (Ikon) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Library Canvas Confetti untuk Efek Hujan F1 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        /* RESET & BASE STYLES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e1e24 0%, #4a0e17 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* TOMBOL THEME TOGGLE */
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            color: #800020;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* KARTU PROFIL UTAMA */
+        .profile-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 580px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+
+        /* KELAS ANIMASI TAMPIL (JS) */
+        .profile-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* HEADER */
+        .card-header {
+            background: linear-gradient(135deg, #800020 0%, #4a0012 100%);
+            padding: 35px 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .card-header img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .card-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .card-header p {
+            font-size: 13px;
+            color: #e0e0e0;
+            margin-top: 4px;
+        }
+
+        /* BODY BIODATA */
+        .card-body {
+            padding: 30px;
+        }
+
+        .card-body h2 {
+            font-size: 15px;
+            color: #800020;
+            border-bottom: 2px solid #800020;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .card-body ul {
+            list-style: none;
+        }
+
+        .card-body li {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #2b2b2b;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-body li i {
+            color: #800020;
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        /* MOTTO & HOBI */
+        .motto-box {
+            background: #f8f9fa;
+            border-left: 4px solid #800020;
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-style: italic;
+            color: #4a0012;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .motto-box i {
+            font-size: 18px;
+            color: #800020;
+        }
+
+        .hobby-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .hobby-item {
+            background: #f3f4f6;
+            color: #800020;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* TOMBOL AKSI INTERAKTIF */
+        .action-section {
+            margin-top: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .action-btn {
+            background: #800020;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: #4a0012;
+            transform: scale(1.05);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* NOTIFIKASI SPESIAL POPUP LINTASAN */
+        .f1-toast {
+            margin-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #800020;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .f1-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* TEMA GELAP (DARK MODE) */
+        body.dark-mode {
+            background: linear-gradient(135deg, #0d0d0f 0%, #1a0307 100%);
+        }
+
+        body.dark-mode .profile-card {
+            background: #1e1e24;
+            color: #ffffff;
+        }
+
+        body.dark-mode .card-body li {
+            color: #e0e0e0;
+            border-bottom-color: #333;
+        }
+
+        body.dark-mode .motto-box {
+            background: #2a2a32;
+            color: #ffb3c1;
+        }
+
+        body.dark-mode .hobby-item {
+            background: #2a2a32;
+            color: #ffb3c1;
+            border-color: #444;
+        }
+
+        body.dark-mode .theme-btn {
+            background: #800020;
+            color: #ffffff;
+        }
+
+        body.dark-mode .f1-toast {
+            color: #ffb3c1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tombol Mode Gelap/Terang -->
+    <button id="themeToggle" class="theme-btn" title="Ubah Tema">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <div class="profile-card">
+        <!-- HEADER: FOTO, NAMA, SEKOLAH -->
+        <div class="card-header">
+            <img src="c:\Users\M Rifki\OneDrive\Pictures\Camera Roll\WIN_20261023_11_08_40_Pro.jpg" alt="Foto Profil Rifki Maulana">
+            <h1>Muhamaad Rifki Maulana Saputra</h1>
+            <p>Siswa Kelas X RPL 3 - SMK Negeri 1 Gunung Putri</p>
+        </div>
+
+        <!-- ISI BIODATA -->
+        <div class="card-body">
+            <h2>Biodata & Kontak</h2>
+            <ul>
+                <li><strong><i class="fa-solid fa-calendar-days"></i> TTL:</strong> Bogor, 4 Februari 2011</li>
+                <li><strong><i class="fa-solid fa-location-dot"></i> Alamat:</strong> Kp. Kedep, RT 03/RW 19 No. 18, Tlajung Udik, Gunung Putri, Bogor</li>
+                <li><strong><i class="fa-solid fa-envelope"></i> Email:</strong> rifkimaulana42011@gmail.com</li>
+            </ul>
+
+            <h2>Motto Hidup</h2>
+            <div class="motto-box">
+                <i class="fa-solid fa-quote-left"></i>
+                <p>"The future belongs to those who believe in the beauty of their dreams."</p>
+            </div>
+
+            <h2>Hobi</h2>
+            <div class="hobby-list">
+                <span class="hobby-item"><i class="fa-solid fa-book-open"></i> Membaca buku</span>
+                <span class="hobby-item"><i class="fa-solid fa-flag-checkered"></i> Menonton F1 & MotoGP</span>
+                <span class="hobby-item"><i class="fa-solid fa-person-running"></i> Berlari</span>
+            </div>
+
+            <!-- TOMBOL INTERAKTIF ELEGAN BERTEMA F1 -->
+            <div class="action-section">
+                <button id="greetBtn" class="action-btn">
+                    <i class="fa-solid fa-flag-checkered"></i> Sapa Rifki!
+                </button>
+                <div id="f1Toast" class="f1-toast">🏎️ P1 Finish! Terima kasih sudah mampir! 🏆</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Animasi Muncul saat Halaman Selesai Dimuat
+        document.addEventListener("DOMContentLoaded", function () {
+            const card = document.querySelector(".profile-card");
+            setTimeout(function () {
+                card.classList.add("show");
+            }, 100);
+        });
+
+        // 2. Efek Hujan Bendera Finis F1 & Trofi saat Tombol Sapa Diklik
+        const greetBtn = document.getElementById("greetBtn");
+        const f1Toast = document.getElementById("f1Toast");
+
+        greetBtn.addEventListener("click", function () {
+            // Tampilkan Teks Salam F1
+            f1Toast.classList.add("show");
+            setTimeout(function () {
+                f1Toast.classList.remove("show");
+            }, 3500);
+
+            // Jalankan Efek Confetti F1 dari Kiri dan Kanan Layar
+            const count = 200;
+            const defaults = {
+                origin: { y: 0.7 }
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            // Kombinasi Warna F1 (Merah, Hitam, Putih, Emas)
+            fire(0.25, {
+                spread: 26,
+                startVelocity: 55,
+                colors: ['#800020', '#ffffff', '#000000', '#ffd700']
+            });
+            fire(0.2, {
+                spread: 60,
+                colors: ['#ffffff', '#000000']
+            });
+            fire(0.35, {
+                spread: 100,
+                decay: 0.91,
+                scalar: 0.8
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 25,
+                decay: 0.92,
+                colors: ['#ffd700', '#800020']
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 45,
+            });
+        });
+
+        // 3. Toggle Mode Gelap / Terang
+        const themeToggleBtn = document.getElementById("themeToggle");
+        const body = document.body;
+
+        themeToggleBtn.addEventListener("click", function () {
+            body.classList.toggle("dark-mode");
+            
+            // Ubah Ikon Tombol (Bulan / Matahari)
+            const icon = themeToggleBtn.querySelector("i");
+            if (body.classList.contains("dark-mode")) {
+                icon.classList.remove("fa-moon");
+                icon.classList.add("fa-sun");
+            } else {
+                icon.classList.remove("fa-sun");
+                icon.classList.add("fa-moon");
+            }
+        });
+    </script>
+</body>
+</html>
